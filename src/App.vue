@@ -10,6 +10,7 @@
       :sunrise="sunrise"
       :sunset="sunset"
     ></city-weather-info>
+    <geolocation-map :lon="lon" :lat="lat"></geolocation-map>
     <city-search-history
       v-if="historyIsNotEmpty"
       :citySearchHistory="citySearchHistory"
@@ -22,9 +23,16 @@ import TheHeader from "./components/layouts/TheHeader.vue";
 import FindCity from "./components/FindCity.vue";
 import CityWeatherInfo from "./components/CityWeatherInfo.vue";
 import CitySearchHistory from "./components/CitySearchHistory";
+import GeolocationMap from "./components/GeolocationMap.vue";
 
 export default {
-  components: { TheHeader, FindCity, CityWeatherInfo, CitySearchHistory },
+  components: {
+    TheHeader,
+    FindCity,
+    CityWeatherInfo,
+    CitySearchHistory,
+    GeolocationMap,
+  },
   data() {
     return {
       weather: {},
@@ -32,6 +40,8 @@ export default {
       weatherDescription: "",
       sunrise: "",
       sunset: "",
+      lon: "",
+      lat: "",
       citySearchHistory: [],
       historyIsNotEmpty: false,
     };
@@ -53,11 +63,13 @@ export default {
     setResults(results) {
       this.weather = results;
       this.cityName = results.name;
-      this.weatherDescription = results.weather.main;
+      this.weatherDescription = results["weather"][0]["main"];
       this.sunrise = new Date(results.sys.sunrise * 1000).toLocaleTimeString();
       this.sunset = new Date(results.sys.sunset * 1000).toLocaleTimeString();
       this.citySearchHistory.unshift(this.cityName);
       console.log(this.citySearchHistory);
+      this.lon = results.coord.lon;
+      this.lat = results.coord.lat;
       if (this.citySearchHistory.length > 0) {
         this.historyIsNotEmpty = true;
       }
