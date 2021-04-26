@@ -10,7 +10,7 @@ const api = createApp(App);
 
 Vue.use(VueGoogleMap, {
   load: {
-    apiKey: "",
+    apiKey: "AIzaSyDExysVcmGyDf5UdYCZsKCYp1UVAC5UtjM",
   },
 });
 
