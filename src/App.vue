@@ -10,6 +10,10 @@
       :sunrise="sunrise"
       :sunset="sunset"
     ></city-weather-info>
+    <city-search-history
+      v-if="historyIsNotEmpty"
+      :citySearchHistory="citySearchHistory"
+    ></city-search-history>
   </main>
 </template>
 
@@ -17,9 +21,10 @@
 import TheHeader from "./components/layouts/TheHeader.vue";
 import FindCity from "./components/FindCity.vue";
 import CityWeatherInfo from "./components/CityWeatherInfo.vue";
+import CitySearchHistory from "./components/CitySearchHistory";
 
 export default {
-  components: { TheHeader, FindCity, CityWeatherInfo },
+  components: { TheHeader, FindCity, CityWeatherInfo, CitySearchHistory },
   data() {
     return {
       weather: {},
@@ -28,6 +33,7 @@ export default {
       sunrise: "",
       sunset: "",
       citySearchHistory: [],
+      historyIsNotEmpty: false,
     };
   },
   provide() {
@@ -50,7 +56,14 @@ export default {
       this.weatherDescription = results.weather.main;
       this.sunrise = new Date(results.sys.sunrise * 1000).toLocaleTimeString();
       this.sunset = new Date(results.sys.sunset * 1000).toLocaleTimeString();
-      this.citySearchHistory = this.citySearchHistory.unshift(results.name);
+      this.citySearchHistory.unshift(this.cityName);
+      console.log(this.citySearchHistory);
+      if (this.citySearchHistory.length > 0) {
+        this.historyIsNotEmpty = true;
+      }
+      if (this.citySearchHistory.length > 10) {
+        this.citySearchHistory.splice(11, 1);
+      }
     },
   },
 };
